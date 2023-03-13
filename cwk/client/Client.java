@@ -35,7 +35,7 @@ public class Client
                 while ((response = in.readLine()) != null) 
 				{
                     System.out.println(response);
-                }{
+                }{}
             } 
 			else if (command.equals("item")) 
 			{

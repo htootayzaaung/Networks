@@ -171,13 +171,13 @@ public class Server
 
 		private void addItem(String itemName) 
 		{
-			if (items.containsKey(itemName)) 
+			if (items.containsKey(itemName.toLowerCase())) 
 			{
 				out.println("Item already exists.");
 			} 
 			else 
 			{
-				items.put(itemName, 0.0);
+				items.put(itemName.toLowerCase(), 0.0);
 				out.println("Success.");
 			}
 		}
