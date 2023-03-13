@@ -108,7 +108,7 @@ public class Server
                     } 
 					else 
 					{
-                        addItem(parts[1]);
+                        addItem(parts[1], items);
                     }
                 } 
 				else if (parts[0].equals("bid")) 
@@ -169,18 +169,32 @@ public class Server
 			}
 		}
 
-		private void addItem(String itemName) 
+		private void addItem(String itemName, HashMap<String, Double> items) 
 		{
-			if (items.containsKey(itemName.toLowerCase())) 
+			//Creates an empty local HashMap that copies all the items in the HashMap "items"
+			HashMap<String, Double> copiedMap = new HashMap<>();
+
+			//Converts all the keys from the global Hashmap items toLowerCase
+			for (String key : items.keySet()) 
 			{
-				out.println("Item already exists.");
+				copiedMap.put(key.toLowerCase(), items.get(key));
+			}
+
+			/*
+				Checks if the name of a key already exists in the "items" and "copiedMap" (which are element-wise equivalent)
+				by converting "itemName" "toLowerCase".
+			*/
+			if (copiedMap.containsKey(itemName.toLowerCase())) 
+			{
+				out.println("Item already exists!");
 			} 
-			else 
+			else //Otherwise treat this item as a new item and append it into "items" HashMap
 			{
-				items.put(itemName.toLowerCase(), 0.0);
+				items.put(itemName, 0.0);
 				out.println("Success.");
 			}
 		}
+		
 
 		private void placeBid(String itemName, double bidAmount, String bidder) 
 		{
