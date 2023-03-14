@@ -7,21 +7,22 @@ import java.net.Socket;
 public class Client 
 {
     private static final String HOSTNAME = "localhost";
-    private static final int PORT = 6000; // Replace with your chosen port number
+    private static final int PORT_NUMBER = 6500; // Replace with your chosen port number
 
     public static void main(String[] args) 
 	{
-        // Check command line arguments
-        if (args.length < 1) {
-            System.out.println("Usage: java Client <command>");
+        // Shows a summary of all the Usage and command-line instructions
+        if (args.length < 1) 
+        {
+            System.out.println("Usage: java Client <command>\njava Client show - show items in the auction\njava Client item <itemname> - add items to the auction\njava Client bid <itemname> <bidamount> - bid the item by name and bidamount");
             return;
         }
 
         // Connect to the server and send command to it
-        try (Socket socket = new Socket(HOSTNAME, PORT);
-             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-             PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) 
-			 {
+        try (Socket socket = new Socket(HOSTNAME, PORT_NUMBER);
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) 
+			{
 
             String command = args[0];
 
@@ -44,10 +45,9 @@ public class Client
                     System.out.println("Usage: java Client item <itemname>");
                     return;
                 }
-                String itemName = args[1];
 
                 // Send command to the server
-                out.println("item " + itemName);
+                out.println("item " + args[1]);
 
                 // Wait for and process response from the server
                 String response = in.readLine();
@@ -60,11 +60,11 @@ public class Client
                     System.out.println("Usage: java Client bid <itemname> <bidamount>");
                     return;
                 }
-                String itemName = args[1];
+                
                 double bidAmount = Double.parseDouble(args[2]);
 
                 // Send command to the server
-                out.println("bid " + itemName + " " + bidAmount);
+                out.println("bid " + args[1] + " " + bidAmount);
 
                 // Wait for and process response from the server
                 String response = in.readLine();

@@ -96,43 +96,40 @@ public class Server
 			{
                 // Read message from client
                 String request = in.readLine();
-                String[] parts = request.split(" ");
+                String[] arguments = request.split(" ");
 				logRequest(request);
 
                 // Parse message and handle request
-                if (parts[0].equals("show")) 
+                if (arguments[0].equals("show")) 
 				{
                     showItems();
                 } 
-				else if (parts[0].equals("item")) 
+				else if (arguments[0].equals("item")) 
 				{
-                    if (parts.length < 2) 
+                    if (arguments.length < 2) 
 					{
                         out.println("Usage: item <itemname>");
                     } 
 					else 
 					{
-                        addItem(parts[1], items);
+                        addItem(arguments[1], items);
                     }
                 } 
-				else if (parts[0].equals("bid")) 
+				else if (arguments[0].equals("bid")) 
 				{
-                    if (parts.length < 3) 
+                    if (arguments.length < 3) 
 					{
                         out.println("Usage: bid <itemname> <bidamount>");
                     } 
 					else 
 					{
-                        String itemName = parts[1];
-                        double bidAmount = Double.parseDouble(parts[2]);
-                        placeBid(itemName, bidAmount, clientSocket.getInetAddress().getHostAddress());
+                        placeBid(arguments[1], Double.parseDouble(arguments[2]), clientSocket.getInetAddress().getHostAddress());
                     }
                 } 
 				else 
 				{
                     out.println("Invalid command");
                 }
-
             } 
 			catch (Exception e) 
 			{
@@ -160,20 +157,20 @@ public class Server
 			} 
 			else 
 			{
-				for (String itemName : items.keySet()) 
+				for (String object : items.keySet()) 
 				{
-					double highestBid = items.get(itemName);
+					double highestBid = items.get(object);
 					String bidder = "<no bids>";
 					if (highestBid > 0) 
 					{
-						bidder = highestBidders.get(itemName);
+						bidder = highestBidders.get(object);
 					}
-					out.printf("%s : %.1f : %s%n", itemName, highestBid, bidder);
+					out.printf("%s : %.1f : %s%n", object, highestBid, bidder);
 				}
 			}
 		}
 
-		private void addItem(String itemName, HashMap<String, Double> items) 
+		private void addItem(String object, HashMap<String, Double> items) 
 		{
 			//Creates an empty local HashMap that copies all the items in the HashMap "items"
 			HashMap<String, Double> copiedMap = new HashMap<>();
@@ -186,37 +183,37 @@ public class Server
 
 			/*
 				Checks if the name of a key already exists in the "items" and "copiedMap" (which are element-wise equivalent)
-				by converting "itemName" "toLowerCase".
+				by converting "object" "toLowerCase".
 			*/
-			if (copiedMap.containsKey(itemName.toLowerCase())) 
+			if (copiedMap.containsKey(object.toLowerCase())) 
 			{
 				out.println("Item already exists!");
 			} 
 			else //Otherwise treat this item as a new item and append it into "items" HashMap
 			{
-				items.put(itemName, 0.0);
+				items.put(object, 0.0);
 				out.println("Success.");
 			}
 		}
 		
 
-		private void placeBid(String itemName, double bidAmount, String bidder) 
+		private void placeBid(String object, double bidAmount, String bidder) 
 		{
-			if (!items.containsKey(itemName)) 
+			if (items.containsKey(object) == false) 
 			{
 				out.println("Item not found.");
 			}
 			else 
 			{
-				double highestBid = items.get(itemName);
+				double highestBid = items.get(object);
 				if (bidAmount <= highestBid) 
 				{
 					out.println("Rejected.");
 				} 
 				else 
 				{
-					items.put(itemName, bidAmount);
-					highestBidders.put(itemName, bidder);
+					items.put(object, bidAmount);
+					highestBidders.put(object, bidder);
 					out.println("Accepted.");
 				}
 			}
@@ -229,3 +226,4 @@ public class Server
 		}
     }
 }
+
