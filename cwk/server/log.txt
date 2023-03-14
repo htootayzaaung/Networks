@@ -1,10 +1,49 @@
-14-03-2023|14:16:28|127.0.0.1|show
-14-03-2023|14:18:07|127.0.0.1|item htoo
-14-03-2023|14:18:18|127.0.0.1|item htOO
-14-03-2023|14:19:57|127.0.0.1|bid htoo 10.0
-14-03-2023|14:21:23|127.0.0.1|bid htoo 9.0
-14-03-2023|14:21:33|127.0.0.1|bid htoo 12.0
-14-03-2023|14:21:42|127.0.0.1|bid htoo 14.0
-14-03-2023|14:22:13|127.0.0.1|show
-14-03-2023|14:34:23|127.0.0.1|show
-14-03-2023|14:35:16|127.0.0.1|bid htoo 4.5
+14-03-2023|21:52:19|127.0.0.1|java Client show
+14-03-2023|21:52:26|127.0.0.1|java Client item htoo
+14-03-2023|21:52:38|127.0.0.1|java Client item Htoo
+14-03-2023|21:52:48|127.0.0.1|java Client bid Htoo 2.0
+14-03-2023|21:52:59|127.0.0.1|java Client bid htoo 3.0
+14-03-2023|21:53:12|127.0.0.1|java Client show
+14-03-2023|22:10:34|127.0.0.1|java Client show
+14-03-2023|22:10:39|127.0.0.1|java Client item htoo
+14-03-2023|22:10:48|127.0.0.1|java Client item Htoo
+14-03-2023|22:11:04|127.0.0.1|java Client bid HTOo 2.3
+14-03-2023|22:13:32|127.0.0.1|java Client show
+14-03-2023|22:13:46|127.0.0.1|java Client item htoo
+14-03-2023|22:13:51|127.0.0.1|java Client item Htoo
+14-03-2023|22:14:41|127.0.0.1|java Client bid three 2.0
+14-03-2023|22:16:11|127.0.0.1|java Client item three
+14-03-2023|22:16:44|127.0.0.1|java Client bid Three 2.0
+14-03-2023|22:16:53|127.0.0.1|java Client show
+14-03-2023|22:41:13|127.0.0.1|java Client show
+14-03-2023|22:41:20|127.0.0.1|java Client item htoo
+14-03-2023|22:41:26|127.0.0.1|java Client item Htoo
+14-03-2023|22:41:31|127.0.0.1|java Client show
+14-03-2023|22:41:40|127.0.0.1|java Client bid three 2.0
+14-03-2023|22:41:46|127.0.0.1|java Client show
+14-03-2023|22:41:59|127.0.0.1|java Client bid Htoo 2.0
+14-03-2023|22:43:33|127.0.0.1|java Client show
+14-03-2023|22:43:50|127.0.0.1|java Client item htoo
+14-03-2023|22:43:56|127.0.0.1|java Client item Htoo
+14-03-2023|22:44:09|127.0.0.1|java Client bid three 2.0
+14-03-2023|22:44:29|127.0.0.1|java Client bid Htoo 2.0
+14-03-2023|22:56:50|127.0.0.1|java Client show
+14-03-2023|22:56:59|127.0.0.1|java Client item htoo
+14-03-2023|22:57:05|127.0.0.1|java Client item Htoo
+14-03-2023|22:57:34|127.0.0.1|java Client bid hTOo 2.0
+14-03-2023|22:57:42|127.0.0.1|java Client show
+14-03-2023|23:08:08|127.0.0.1|java Client show
+14-03-2023|23:08:14|127.0.0.1|java Client item htoo
+14-03-2023|23:08:20|127.0.0.1|java Client item HToo
+14-03-2023|23:08:33|127.0.0.1|java Client bid three 3.0
+14-03-2023|23:08:39|127.0.0.1|java Client show
+14-03-2023|23:08:56|127.0.0.1|java Client bid htoO 2.0
+14-03-2023|23:09:03|127.0.0.1|java Client show
+14-03-2023|23:09:16|127.0.0.1|java Client item ThRee
+14-03-2023|23:09:26|127.0.0.1|java Client bid three 3.0
+14-03-2023|23:09:31|127.0.0.1|java Client show
+14-03-2023|23:10:19|127.0.0.1|java Client item THREE
+14-03-2023|23:10:35|127.0.0.1|java Client bid thREE 2.0
+14-03-2023|23:10:56|127.0.0.1|java Client bid thREE 3.0
+14-03-2023|23:11:02|127.0.0.1|java Client bid thREE 4.0
+14-03-2023|23:11:10|127.0.0.1|java Client show

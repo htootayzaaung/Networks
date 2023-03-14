@@ -2,6 +2,7 @@ import java.io.*;
 import java.net.*;
 import java.util.concurrent.*;
 import java.util.HashMap;
+import java.util.Map;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -195,33 +196,48 @@ public class Server
 				out.println("Success.");
 			}
 		}
-		
 
-		private void placeBid(String object, double bidAmount, String bidder) 
+		private void placeBid(String itemName, double bidAmount, String bidder) 
 		{
-			if (items.containsKey(object) == false) 
+			// Create copied hashmaps of items and highestBidders
+			HashMap<String, Double> copiedItems = new HashMap<>(items);
+			HashMap<String, String> copiedBidders = new HashMap<>(highestBidders);
+		
+			// Iterate over the copied items hashmap to find the key that is letter-wise equivalent to itemName
+			String equivalentKey = null;
+			for (String key : copiedItems.keySet()) 
 			{
-				out.println("Item not found.");
-			}
-			else 
-			{
-				double highestBid = items.get(object);
-				if (bidAmount <= highestBid) 
+				if (key.equalsIgnoreCase(itemName)) 
 				{
-					out.println("Rejected.");
-				} 
-				else 
-				{
-					items.put(object, bidAmount);
-					highestBidders.put(object, bidder);
-					out.println("Accepted.");
+					equivalentKey = key;
+					break;
 				}
 			}
+		
+			// Check if equivalent key was found
+			if (equivalentKey == null) 
+			{
+				out.println("Item not found.");
+				return;
+			}
+		
+			// Check if the bid is higher than the current highest bid for the item
+			double currentBid = copiedItems.get(equivalentKey);
+			if (bidAmount <= currentBid) 
+			{
+				out.println("Rejected.");
+				return;
+			}
+		
+			// Update items and highestBidders hashmaps with new bid and bidder
+			items.put(equivalentKey, bidAmount);
+			highestBidders.put(equivalentKey, bidder);
+			out.println("Accepted.");
 		}
-
+		
 		private void logRequest(String request) 
 		{
-			String logMessage = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy|HH:mm:ss")) + "|" + clientSocket.getInetAddress().getHostAddress() + "|" + request;
+			String logMessage = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy|HH:mm:ss")) + "|" + clientSocket.getInetAddress().getHostAddress() + "|" + "java Client " + request;
 			logger.println(logMessage);
 		}
     }

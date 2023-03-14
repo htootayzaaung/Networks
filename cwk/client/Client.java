@@ -26,7 +26,7 @@ public class Client
 
             String command = args[0];
 
-            if (command.equals("show")) 
+            if (command.equals("show") && args.length == 1) 
 			{
                 // Send command to the server
                 out.println("show");
@@ -40,7 +40,7 @@ public class Client
             } 
 			else if (command.equals("item")) 
 			{
-                if (args.length < 2) 
+                if (args.length != 2) 
 				{
                     System.out.println("Usage: java Client item <itemname>");
                     return;
@@ -55,7 +55,7 @@ public class Client
             } 
 			else if (command.equals("bid")) 
 			{
-                if (args.length < 3) 
+                if (args.length != 3) 
 				{
                     System.out.println("Usage: java Client bid <itemname> <bidamount>");
                     return;
