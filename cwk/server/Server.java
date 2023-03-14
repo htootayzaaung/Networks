@@ -1,25 +1,26 @@
 import java.io.*;
 import java.net.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.concurrent.*;
 import java.util.HashMap;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 public class Server 
 {
-    private static final int PORT = 6000; // choose a port number between 6000 and 6999
-    private static final int THREAD_POOL_SIZE = 30;
+    private static final int PORT_NUMBER = 6500; //any port number between 6000 and 6999
 
 	/*
-		A thread pool is a collection of pre-initialized threads that are available to perform a set of tasks. 
-		In a multithreaded program, creating a new thread is expensive in terms of performance, so using a thread 
-		pool can help reduce overhead by reusing existing threads. The thread pool size is the number of threads 
-		in the thread pool, and it determines how many tasks can be executed concurrently. If there are more tasks 
-		than threads, the excess tasks are queued and executed when a thread becomes available. The optimal thread
-		pool size depends on various factors, such as the nature of the tasks, the hardware resources available, 
-		and the desired level of concurrency. In general, a larger thread pool size can improve performance up 
-		to a certain point, beyond which further increases can result in diminishing returns or even performance 
-		degradation due to thread contention and context switching overhead.
+	 * A server listens on a port for incoming connections and and a client connects on a specific port to
+	 * establish a communication channel.
+	 */
+
+    private static final int THREAD_POOL_SIZE = 30; //number of threads
+
+	/*
+	*	A thread pool is a collection of pre-initialized threads that are available to perform a set of tasks. 
+	*	In a multithreaded program, instead of creating a new thread it reuses the existing threads. 
+	* 	It determines how many tasks can be executed concurrently. 
 	*/
 
 	// This is the HashMap for the items
@@ -33,18 +34,18 @@ public class Server
 
         try 
 		{
-            // Create server socket
-            serverSocket = new ServerSocket(PORT);
-            System.out.println("Server listening on port " + PORT);
+            // Create a server socket i.e an endpoint that listens for incoming client connections using the TCP protocol.
+            serverSocket = new ServerSocket(PORT_NUMBER);
+            System.out.println("Server listening to port: " + PORT_NUMBER);
 
-            // Create thread pool
+            // Create thread pool with a size specified
             executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
-            // Accept incoming client connections
+            // Listens and accept incoming client connections thus creating a multi-threaded server that can handle multiple client connections
             while (true) 
 			{
-                Socket clientSocket = serverSocket.accept();
-                executorService.submit(new ClientHandler(clientSocket));
+                Socket clientSocket = serverSocket.accept();				// opens only if a client connection is recieved
+                executorService.submit(new ClientHandler(clientSocket));	// creates a new thread to handle each client connection
             }
 
         } 
@@ -78,12 +79,14 @@ public class Server
         private final Socket clientSocket;
         private final BufferedReader in;
         private final PrintWriter out;
+		private PrintWriter logger;
 
         public ClientHandler(Socket clientSocket) throws IOException 
 		{
             this.clientSocket = clientSocket;
             this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             this.out = new PrintWriter(clientSocket.getOutputStream(), true);
+			this.logger = new PrintWriter(new FileWriter("log.txt", true), true);
         }
 
         @Override
@@ -94,6 +97,7 @@ public class Server
                 // Read message from client
                 String request = in.readLine();
                 String[] parts = request.split(" ");
+				logRequest(request);
 
                 // Parse message and handle request
                 if (parts[0].equals("show")) 
@@ -216,6 +220,12 @@ public class Server
 					out.println("Accepted.");
 				}
 			}
+		}
+
+		private void logRequest(String request) 
+		{
+			String logMessage = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy|HH:mm:ss")) + "|" + clientSocket.getInetAddress().getHostAddress() + "|" + request;
+			logger.println(logMessage);
 		}
     }
 }
