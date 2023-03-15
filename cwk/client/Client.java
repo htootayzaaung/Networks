@@ -22,7 +22,7 @@ public class Client
         try (Socket socket = new Socket(HOSTNAME, PORT_NUMBER);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) 
-			{
+		{
 
             if (args[0].equalsIgnoreCase("show") && args.length == 1) 
 			{
@@ -38,40 +38,45 @@ public class Client
             } 
 			else if (args[0].equalsIgnoreCase("item")) 
 			{
-                if (args.length != 2) 
+                if (args.length == 2)
+                {
+                    // Send command to the server
+                    out.println("item " + args[1]);
+
+                    // Wait for and process response from the server
+                    String response = in.readLine();
+                    System.out.println(response);
+                }
+                else if (args.length != 2) 
 				{
                     System.out.println("Usage: java Client item <itemname>");
                     return;
                 }
 
-                // Send command to the server
-                out.println("item " + args[1]);
-
-                // Wait for and process response from the server
-                String response = in.readLine();
-                System.out.println(response);
             } 
 			else if (args[0].equalsIgnoreCase("bid")) 
 			{
-                if (args.length != 3) 
+                if (args.length == 3)
+                {
+                    double bidAmount = Double.parseDouble(args[2]);
+
+                    // Send command to the server
+                    if (bidAmount > 0)
+                    {
+                        out.println("bid " + args[1] + " " + bidAmount);
+                        // Wait for and process response from the server
+                        String response = in.readLine();
+                        System.out.println(response);
+                    }
+                    else if (bidAmount < 0)
+                    {
+                        System.out.println("Invalid <bidamount> - only <bidamount> greater than 0 is accepted!");
+                        return;
+                    }
+                }
+                else if (args.length != 3) 
 				{
                     System.out.println("Usage: java Client bid <itemname> <bidamount>");
-                    return;
-                }
-                
-                double bidAmount = Double.parseDouble(args[2]);
-
-                // Send command to the server
-                if (bidAmount > 0)
-                {
-                    out.println("bid " + args[1] + " " + bidAmount);
-                    // Wait for and process response from the server
-                    String response = in.readLine();
-                    System.out.println(response);
-                }
-                else
-                {
-                    System.out.println("Invalid <bidamount> - only <bidamount> greater than 0 is accepted!");
                     return;
                 }
             } 

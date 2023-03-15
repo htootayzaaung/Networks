@@ -1,12 +1,6 @@
-15-03-2023|18:48:09|127.0.0.1|java Client show
-15-03-2023|18:48:26|127.0.0.1|java Client item htoo
-15-03-2023|18:48:45|127.0.0.1|java Client bid htoo 5.0
-15-03-2023|18:49:04|127.0.0.1|java Client show
-15-03-2023|18:49:17|127.0.0.1|java Client bid htOO 76.0
-15-03-2023|18:49:25|127.0.0.1|java Client show
-15-03-2023|18:54:24|127.0.0.1|java Client item nwar
-15-03-2023|18:54:29|127.0.0.1|java Client show
-15-03-2023|18:54:48|127.0.0.1|java Client bid nwar 5.0
-15-03-2023|18:54:55|127.0.0.1|java Client show
-15-03-2023|18:55:13|127.0.0.1|java Client show
-15-03-2023|19:02:25|127.0.0.1|java Client bid nwaR 6.0
+15-03-2023|21:49:32|127.0.0.1|java Client show
+15-03-2023|21:49:41|127.0.0.1|java Client item pen
+15-03-2023|21:51:43|127.0.0.1|java Client item Hear
+15-03-2023|21:51:49|127.0.0.1|java Client show
+15-03-2023|21:51:59|127.0.0.1|java Client bid pen 3.0
+15-03-2023|21:52:00|127.0.0.1|java Client show
