@@ -104,13 +104,11 @@ public class Server
 				else 
 				{
             		String[] arguments = request.split(" ");
-            		boolean shouldLog = false;
 
             		// Parse message and handle request
             		if (arguments[0].equalsIgnoreCase("show"))
 					{
 						showItems();
-						shouldLog = true;
             		} 
 					else if (arguments[0].equalsIgnoreCase("item")) 
 					{
@@ -120,11 +118,7 @@ public class Server
                 		} 
 						else 
 						{
-                    		boolean itemAdded = addItem(arguments[1], items);
-                    		if (itemAdded) 
-							{
-                        		shouldLog = true;
-                    		}
+                    		addItem(arguments[1], items);
                 		}
             		} 
 					else if (arguments[0].equalsIgnoreCase("bid")) 
@@ -135,18 +129,14 @@ public class Server
                 		} 
 						else 
 						{
-                    		boolean bidPlaced = placeBid(arguments[1], Double.parseDouble(arguments[2]), clientSocket.getInetAddress().getHostAddress());
-                    		if (bidPlaced) 
-							{
-                        		shouldLog = true;
-                    		}
+                    		placeBid(arguments[1], Double.parseDouble(arguments[2]), clientSocket.getInetAddress().getHostAddress());
                 		}
             		} 
 					else 
 					{
                 		out.println("Invalid command");
             		}
-            		logRequest(request, shouldLog);
+            		logRequest(request);
         		}
     		} 
 			catch (Exception exception) 
@@ -186,10 +176,9 @@ public class Server
 					out.printf("%s : %.1f : %s%n", object, highestBid, bidder);
 				}
 			}
-			out.flush();
 		}
 
-		private boolean addItem(String object, HashMap<String, Double> items) 
+		private void addItem(String object, HashMap<String, Double> items) 
 		{
 			//Creates an empty local HashMap that copies all the items in the HashMap "items"
 			HashMap<String, Double> copiedMap = new HashMap<>();
@@ -207,17 +196,15 @@ public class Server
 			if (copiedMap.containsKey(object.toLowerCase())) 
 			{
 				out.println("Item already exists!");
-				return false;
 			} 
 			else //Otherwise treat this item as a new item and append it into "items" HashMap
 			{
 				items.put(object, 0.0);
 				out.println("Success.");
-				return true;
 			}
 		}
 
-		private boolean placeBid(String itemName, double bidAmount, String bidder) 
+		private void placeBid(String itemName, double bidAmount, String bidder) 
 		{
 			// Create copied hashmaps of items and highestBidders
 			HashMap<String, Double> copiedItems = new HashMap<>(items);
@@ -237,7 +224,6 @@ public class Server
 			if (equivalentKey == null) 
 			{
 				out.println("Item not found.");
-				return false;
 			}
 		
 			// Check if the bid is higher than the current highest bid for the item
@@ -245,23 +231,18 @@ public class Server
 			if (bidAmount <= currentBid) 
 			{
 				out.println("Rejected.");
-				return false;
 			}
 		
 			// Update items and highestBidders hashmaps with new bid and bidder
 			items.put(equivalentKey, bidAmount);
 			highestBidders.put(equivalentKey, bidder);
 			out.println("Accepted.");
-			return true;
 		}
 		
-    	private void logRequest(String request, boolean shouldLog) 
+    	private void logRequest(String request) 
 		{
-        	if (shouldLog) 
-			{
-            	String logMessage = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy|HH:mm:ss")) + "|" + clientSocket.getInetAddress().getHostAddress() + "|" + "java Client " + request;
-            	logger.println(logMessage);
-        	}
+            String logMessage = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy|HH:mm:ss")) + "|" + clientSocket.getInetAddress().getHostAddress() + "|" + "java Client " + request;
+            logger.println(logMessage);
     	}
     }
 }
