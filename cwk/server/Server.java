@@ -90,72 +90,82 @@ public class Server
         }
 
         @Override
-        public void run() 
+		public void run() 
 		{
-            try 
+    		try 
 			{
-                // Read message from client
-                String request = in.readLine();
+        		// Read message from client
+        		String request = in.readLine();
 
-				if (request == null)
+        		if (request == null) 
 				{
-					return;
-				}
-				else
+            		return;
+        		} 
+				else 
 				{
-					String[] arguments = request.split(" ");
-					logRequest(request);
-					                
-					// Parse message and handle request
-					if (arguments[0].equalsIgnoreCase("show")) 
+            		String[] arguments = request.split(" ");
+            		boolean shouldLog = false;
+
+            		// Parse message and handle request
+            		if (arguments[0].equalsIgnoreCase("show"))
 					{
 						showItems();
-					} 
+						shouldLog = true;
+            		} 
 					else if (arguments[0].equalsIgnoreCase("item")) 
 					{
-						if (arguments.length < 2) 
+                		if (arguments.length < 2) 
 						{
-							out.println("Usage: item <itemname>");
-						} 
+                    		out.println("Usage: item <itemname>");
+                		} 
 						else 
 						{
-							addItem(arguments[1], items);
-						}
-					} 
+                    		boolean itemAdded = addItem(arguments[1], items);
+                    		if (itemAdded) 
+							{
+                        		shouldLog = true;
+                    		}
+                		}
+            		} 
 					else if (arguments[0].equalsIgnoreCase("bid")) 
 					{
-						if (arguments.length < 3) 
+                		if (arguments.length < 3) 
 						{
-							out.println("Usage: bid <itemname> <bidamount>");
-						} 
+                    		out.println("Usage: bid <itemname> <bidamount>");
+                		} 
 						else 
 						{
-							placeBid(arguments[1], Double.parseDouble(arguments[2]), clientSocket.getInetAddress().getHostAddress());
-						}
-					}
+                    		boolean bidPlaced = placeBid(arguments[1], Double.parseDouble(arguments[2]), clientSocket.getInetAddress().getHostAddress());
+                    		if (bidPlaced) 
+							{
+                        		shouldLog = true;
+                    		}
+                		}
+            		} 
 					else 
 					{
-						out.println("Invalid command");
-					}
-				}
-            } 
+                		out.println("Invalid command");
+            		}
+            		logRequest(request, shouldLog);
+        		}
+    		} 
 			catch (Exception exception) 
 			{
-                exception.printStackTrace();
-            } 
+        		exception.printStackTrace();
+    		} 
 			finally 
 			{
-                // Clean up resources
-                try 
+        		// Clean up resources
+        		try 
 				{
-                    clientSocket.close();
-                } 
+            		clientSocket.close();
+        		} 
 				catch (Exception exception) 
 				{
-                    exception.printStackTrace();
-                }
-            }
-        }
+            		exception.printStackTrace();
+        		}
+    		}
+		}
 
 		private void showItems() 
 		{
@@ -176,9 +186,10 @@ public class Server
 					out.printf("%s : %.1f : %s%n", object, highestBid, bidder);
 				}
 			}
+			out.flush();
 		}
 
-		private void addItem(String object, HashMap<String, Double> items) 
+		private boolean addItem(String object, HashMap<String, Double> items) 
 		{
 			//Creates an empty local HashMap that copies all the items in the HashMap "items"
 			HashMap<String, Double> copiedMap = new HashMap<>();
@@ -196,15 +207,17 @@ public class Server
 			if (copiedMap.containsKey(object.toLowerCase())) 
 			{
 				out.println("Item already exists!");
+				return false;
 			} 
 			else //Otherwise treat this item as a new item and append it into "items" HashMap
 			{
 				items.put(object, 0.0);
 				out.println("Success.");
+				return true;
 			}
 		}
 
-		private void placeBid(String itemName, double bidAmount, String bidder) 
+		private boolean placeBid(String itemName, double bidAmount, String bidder) 
 		{
 			// Create copied hashmaps of items and highestBidders
 			HashMap<String, Double> copiedItems = new HashMap<>(items);
@@ -224,7 +237,7 @@ public class Server
 			if (equivalentKey == null) 
 			{
 				out.println("Item not found.");
-				return;
+				return false;
 			}
 		
 			// Check if the bid is higher than the current highest bid for the item
@@ -232,19 +245,23 @@ public class Server
 			if (bidAmount <= currentBid) 
 			{
 				out.println("Rejected.");
-				return;
+				return false;
 			}
 		
 			// Update items and highestBidders hashmaps with new bid and bidder
 			items.put(equivalentKey, bidAmount);
 			highestBidders.put(equivalentKey, bidder);
 			out.println("Accepted.");
+			return true;
 		}
 		
-		private void logRequest(String request) 
+    	private void logRequest(String request, boolean shouldLog) 
 		{
-			String logMessage = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy|HH:mm:ss")) + "|" + clientSocket.getInetAddress().getHostAddress() + "|" + "java Client " + request;
-			logger.println(logMessage);
-		}
+        	if (shouldLog) 
+			{
+            	String logMessage = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy|HH:mm:ss")) + "|" + clientSocket.getInetAddress().getHostAddress() + "|" + "java Client " + request;
+            	logger.println(logMessage);
+        	}
+    	}
     }
 }
