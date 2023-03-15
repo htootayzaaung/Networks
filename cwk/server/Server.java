@@ -2,7 +2,6 @@ import java.io.*;
 import java.net.*;
 import java.util.concurrent.*;
 import java.util.HashMap;
-import java.util.Map;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -50,9 +49,9 @@ public class Server
             }
 
         } 
-		catch (Exception e) 
+		catch (Exception exception) 
 		{
-            e.printStackTrace();
+            exception.printStackTrace();
         } 
 		finally 
 		{
@@ -67,9 +66,9 @@ public class Server
 				{
                     serverSocket.close();
                 } 
-				catch (Exception e) 
+				catch (Exception exception) 
 				{
-                    e.printStackTrace();
+                    exception.printStackTrace();
                 }
             }
         }
@@ -97,44 +96,52 @@ public class Server
 			{
                 // Read message from client
                 String request = in.readLine();
-                String[] arguments = request.split(" ");
-				logRequest(request);
 
-                // Parse message and handle request
-                if (arguments[0].equals("show")) 
+				if (request == null)
 				{
-                    showItems();
-                } 
-				else if (arguments[0].equals("item")) 
+					return;
+				}
+				else
 				{
-                    if (arguments.length < 2) 
+					String[] arguments = request.split(" ");
+					logRequest(request);
+					                
+					// Parse message and handle request
+					if (arguments[0].equalsIgnoreCase("show")) 
 					{
-                        out.println("Usage: item <itemname>");
-                    } 
+						showItems();
+					} 
+					else if (arguments[0].equalsIgnoreCase("item")) 
+					{
+						if (arguments.length < 2) 
+						{
+							out.println("Usage: item <itemname>");
+						} 
+						else 
+						{
+							addItem(arguments[1], items);
+						}
+					} 
+					else if (arguments[0].equalsIgnoreCase("bid")) 
+					{
+						if (arguments.length < 3) 
+						{
+							out.println("Usage: bid <itemname> <bidamount>");
+						} 
+						else 
+						{
+							placeBid(arguments[1], Double.parseDouble(arguments[2]), clientSocket.getInetAddress().getHostAddress());
+						}
+					}
 					else 
 					{
-                        addItem(arguments[1], items);
-                    }
-                } 
-				else if (arguments[0].equals("bid")) 
-				{
-                    if (arguments.length < 3) 
-					{
-                        out.println("Usage: bid <itemname> <bidamount>");
-                    } 
-					else 
-					{
-                        placeBid(arguments[1], Double.parseDouble(arguments[2]), clientSocket.getInetAddress().getHostAddress());
-                    }
-                } 
-				else 
-				{
-                    out.println("Invalid command");
-                }
+						out.println("Invalid command");
+					}
+				}
             } 
-			catch (Exception e) 
+			catch (Exception exception) 
 			{
-                e.printStackTrace();
+                exception.printStackTrace();
             } 
 			finally 
 			{
@@ -143,9 +150,9 @@ public class Server
 				{
                     clientSocket.close();
                 } 
-				catch (Exception e) 
+				catch (Exception exception) 
 				{
-                    e.printStackTrace();
+                    exception.printStackTrace();
                 }
             }
         }
@@ -201,7 +208,6 @@ public class Server
 		{
 			// Create copied hashmaps of items and highestBidders
 			HashMap<String, Double> copiedItems = new HashMap<>(items);
-			HashMap<String, String> copiedBidders = new HashMap<>(highestBidders);
 		
 			// Iterate over the copied items hashmap to find the key that is letter-wise equivalent to itemName
 			String equivalentKey = null;
@@ -242,4 +248,3 @@ public class Server
 		}
     }
 }
-

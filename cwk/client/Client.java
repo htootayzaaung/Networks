@@ -24,9 +24,7 @@ public class Client
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) 
 			{
 
-            String command = args[0];
-
-            if (command.equals("show") && args.length == 1) 
+            if (args[0].equalsIgnoreCase("show") && args.length == 1) 
 			{
                 // Send command to the server
                 out.println("show");
@@ -38,7 +36,7 @@ public class Client
                     System.out.println(response);
                 }{}
             } 
-			else if (command.equals("item")) 
+			else if (args[0].equalsIgnoreCase("item")) 
 			{
                 if (args.length != 2) 
 				{
@@ -53,7 +51,7 @@ public class Client
                 String response = in.readLine();
                 System.out.println(response);
             } 
-			else if (command.equals("bid")) 
+			else if (args[0].equalsIgnoreCase("bid")) 
 			{
                 if (args.length != 3) 
 				{
@@ -64,33 +62,28 @@ public class Client
                 double bidAmount = Double.parseDouble(args[2]);
 
                 // Send command to the server
-                out.println("bid " + args[1] + " " + bidAmount);
-
-                // Wait for and process response from the server
-                String response = in.readLine();
-                System.out.println(response);
-            } 
-			else if (command.equals("status")) 
-			{
-                // Send command to the server
-                out.println("status");
-
-                // Wait for and process response from the server
-                String response;
-                while ((response = in.readLine()) != null) 
-				{
+                if (bidAmount > 0)
+                {
+                    out.println("bid " + args[1] + " " + bidAmount);
+                    // Wait for and process response from the server
+                    String response = in.readLine();
                     System.out.println(response);
+                }
+                else
+                {
+                    System.out.println("Invalid <bidamount> - only <bidamount> greater than 0 is accepted!");
+                    return;
                 }
             } 
 			else 
 			{
-                System.out.println("Invalid command: " + command);
+                System.out.println("Invalid command: " + args[0]);
             }
 
         } 
-		catch (IOException e) 
+		catch (IOException exception) 
 		{
-            System.err.println("Error: " + e.getMessage());
+            System.err.println("Error: " + exception.getMessage());
         }
     }
 }
