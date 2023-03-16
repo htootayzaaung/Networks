@@ -20,20 +20,20 @@ public class Client
 
         // Connect to the server and send command to it
         try (Socket socket = new Socket(HOSTNAME, PORT_NUMBER);
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) 
+            BufferedReader recieveServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter sendServer = new PrintWriter(socket.getOutputStream(), true)) 
 		{
 
             if (args[0].equalsIgnoreCase("show") && args.length == 1) 
 			{
                 // Send command to the server
-                out.println("show");
+                sendServer.println("show");
 
                 // Wait for and process response from the server
-                String response;
-                while ((response = in.readLine()) != null) 
+                String serverResponse;
+                while ((serverResponse = recieveServer.readLine()) != null) 
 				{
-                    System.out.println(response);
+                    System.out.println(serverResponse);
                 }{}
             } 
 			else if (args[0].equalsIgnoreCase("item")) 
@@ -41,11 +41,11 @@ public class Client
                 if (args.length == 2)
                 {
                     // Send command to the server
-                    out.println("item " + args[1]);
+                    sendServer.println(args[0] + " " + args[1]);
 
                     // Wait for and process response from the server
-                    String response = in.readLine();
-                    System.out.println(response);
+                    String serverResponse = recieveServer.readLine();
+                    System.out.println(serverResponse);
                 }
                 else if (args.length != 2) 
 				{
@@ -63,10 +63,10 @@ public class Client
                     // Send command to the server
                     if (bidAmount > 0)
                     {
-                        out.println("bid " + args[1] + " " + bidAmount);
+                        sendServer.println(args[0] + " " + args[1] + " " + bidAmount);
                         // Wait for and process response from the server
-                        String response = in.readLine();
-                        System.out.println(response);
+                        String serverResponse = recieveServer.readLine();
+                        System.out.println(serverResponse);
                     }
                     else if (bidAmount < 0)
                     {

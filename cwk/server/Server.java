@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-
 public class Server 
 {
     private static final int PORT_NUMBER = 6500; //any port number between 6000 and 6999
@@ -79,14 +78,14 @@ public class Server
         private final Socket clientSocket;
         private final BufferedReader serverIn;
         private final PrintWriter serverOut;
-		private PrintWriter logger;
+		private PrintWriter txtWriter;
 
         public ClientHandler(Socket clientSocket) throws IOException 
 		{
             this.clientSocket = clientSocket;
             this.serverIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             this.serverOut = new PrintWriter(clientSocket.getOutputStream(), true);
-			this.logger = new PrintWriter(new FileWriter("log.txt", true), true);
+			this.txtWriter = new PrintWriter(new FileWriter("log.txt", true), true);
         }
 
         @Override
@@ -108,12 +107,12 @@ public class Server
             		// Parse message and handle request
             		if (arguments[0].equalsIgnoreCase("show"))
 					{
-						logRequest(request);
+						writeRequestTxt(request);
 						showItems();
             		} 
 					else if (arguments[0].equalsIgnoreCase("item")) 
 					{
-						logRequest(request);
+						writeRequestTxt(request);
                 		if (arguments.length < 2) 
 						{
                     		serverOut.println("Usage: item <itemname>");
@@ -125,7 +124,7 @@ public class Server
             		} 
 					else if (arguments[0].equalsIgnoreCase("bid")) 
 					{
-						logRequest(request);
+						writeRequestTxt(request);
                 		if (arguments.length < 3) 
 						{
                     		serverOut.println("Usage: bid <itemname> <bidamount>");
@@ -208,16 +207,16 @@ public class Server
 			}
 		}
 
-		private void placeBid(String itemName, double bidAmount, String bidder) 
+		private void placeBid(String object, double bidAmount, String bidder) 
 		{
 			// Create copied hashmaps of items and highestBidders
-			HashMap<String, Double> copiedItems = new HashMap<>(items);
+			HashMap<String, Double> copiedMap = new HashMap<>(items);
 		
-			// Iterate over the copied items hashmap to find the key that is letter-wise equivalent to itemName
+			// Iterate over the copied items hashmap to find the key that is letter-wise equivalent to object
 			String equivalentKey = null;
-			for (String key : copiedItems.keySet()) 
+			for (String key : copiedMap.keySet()) 
 			{
-				if (key.equalsIgnoreCase(itemName)) 
+				if (key.equalsIgnoreCase(object)) 
 				{
 					equivalentKey = key;
 					break;
@@ -232,7 +231,7 @@ public class Server
 			}
 		
 			// Check if the bid is higher than the current highest bid for the item
-			double currentBid = copiedItems.get(equivalentKey);
+			double currentBid = copiedMap.get(equivalentKey);
 			if (bidAmount <= currentBid) 
 			{
 				serverOut.println("Rejected.");
@@ -243,12 +242,13 @@ public class Server
 			items.put(equivalentKey, bidAmount);
 			highestBidders.put(equivalentKey, bidder);
 			serverOut.println("Accepted.");
+			return;
 		}
 		
-    	private void logRequest(String request) 
+    	private void writeRequestTxt(String request) 
 		{
             String logMessage = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy|HH:mm:ss")) + "|" + clientSocket.getInetAddress().getHostAddress() + "|" + "java Client " + request;
-            logger.println(logMessage);
+            txtWriter.println(logMessage);
     	}
     }
 }
