@@ -11,9 +11,9 @@ public class Server
     private static final int PORT_NUMBER = 6500; //any port number between 6000 and 6999
 
 	/*
-	 * A server listens on a port for incoming connections and and a client connects on a specific port to
-	 * establish a communication channel.
-	 */
+	* A server listens on a port for incoming connections and and a client connects on a specific port to
+	* establish a communication channel.
+	*/
 
     private static final int THREAD_POOL_SIZE = 30; //number of threads
 
@@ -108,10 +108,12 @@ public class Server
             		// Parse message and handle request
             		if (arguments[0].equalsIgnoreCase("show"))
 					{
+						logRequest(request);
 						showItems();
             		} 
 					else if (arguments[0].equalsIgnoreCase("item")) 
 					{
+						logRequest(request);
                 		if (arguments.length < 2) 
 						{
                     		out.println("Usage: item <itemname>");
@@ -123,6 +125,7 @@ public class Server
             		} 
 					else if (arguments[0].equalsIgnoreCase("bid")) 
 					{
+						logRequest(request);
                 		if (arguments.length < 3) 
 						{
                     		out.println("Usage: bid <itemname> <bidamount>");
@@ -136,7 +139,6 @@ public class Server
 					{
                 		out.println("Invalid command");
             		}
-            		logRequest(request);
         		}
     		} 
 			catch (Exception exception) 
@@ -183,7 +185,7 @@ public class Server
 			//Creates an empty local HashMap that copies all the items in the HashMap "items"
 			HashMap<String, Double> copiedMap = new HashMap<>();
 
-			//Converts all the keys from the global Hashmap items toLowerCase
+			//Converts all the keys from the global Hashmap items toLowerCase and also copies their respective values
 			for (String key : items.keySet()) 
 			{
 				copiedMap.put(key.toLowerCase(), items.get(key));
