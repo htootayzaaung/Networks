@@ -169,12 +169,12 @@ public class Server
 				for (String object : items.keySet()) 
 				{
 					double highestBid = items.get(object);
-					String bidder = "<no bids>";
+					String bidderIP = "<no bids>";
 					if (highestBid > 0) 
 					{
-						bidder = highestBidders.get(object);
+						bidderIP = highestBidders.get(object);
 					}
-					serverOut.printf("%s : %.1f : %s%n", object, highestBid, bidder);
+					serverOut.printf("%s : %.1f : %s%n", object, highestBid, bidderIP);
 				}
 			}
 		}
@@ -207,7 +207,7 @@ public class Server
 			}
 		}
 
-		private void placeBid(String object, double bidAmount, String bidder) 
+		private void placeBid(String object, double newBid, String bidderIP) 
 		{
 			// Create copied hashmaps of items and highestBidders
 			HashMap<String, Double> copiedMap = new HashMap<>(items);
@@ -232,15 +232,15 @@ public class Server
 		
 			// Check if the bid is higher than the current highest bid for the item
 			double currentBid = copiedMap.get(equivalentKey);
-			if (bidAmount <= currentBid) 
+			if (newBid <= currentBid) 
 			{
 				serverOut.println("Rejected.");
 				return;
 			}
 		
 			// Update items and highestBidders hashmaps with new bid and bidder
-			items.put(equivalentKey, bidAmount);
-			highestBidders.put(equivalentKey, bidder);
+			items.put(equivalentKey, newBid);
+			highestBidders.put(equivalentKey, bidderIP);
 			serverOut.println("Accepted.");
 			return;
 		}

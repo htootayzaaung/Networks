@@ -58,17 +58,17 @@ public class Client
 			{
                 if (args.length == 3)
                 {
-                    double bidAmount = Double.parseDouble(args[2]);
+                    double newBid = Double.parseDouble(args[2]);
 
                     // Send command to the server
-                    if (bidAmount > 0)
+                    if (newBid > 0)
                     {
-                        sendServer.println(args[0] + " " + args[1] + " " + bidAmount);
+                        sendServer.println(args[0] + " " + args[1] + " " + newBid);
                         // Wait for and process response from the server
                         String serverResponse = recieveServer.readLine();
                         System.out.println(serverResponse);
                     }
-                    else if (bidAmount < 0)
+                    else if (newBid < 0)
                     {
                         System.out.println("Invalid <bidamount> - only <bidamount> greater than 0 is accepted!");
                         return;
