@@ -77,15 +77,15 @@ public class Server
     static class ClientHandler implements Runnable 
 	{
         private final Socket clientSocket;
-        private final BufferedReader in;
-        private final PrintWriter out;
+        private final BufferedReader serverIn;
+        private final PrintWriter serverOut;
 		private PrintWriter logger;
 
         public ClientHandler(Socket clientSocket) throws IOException 
 		{
             this.clientSocket = clientSocket;
-            this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            this.out = new PrintWriter(clientSocket.getOutputStream(), true);
+            this.serverIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            this.serverOut = new PrintWriter(clientSocket.getOutputStream(), true);
 			this.logger = new PrintWriter(new FileWriter("log.txt", true), true);
         }
 
@@ -95,7 +95,7 @@ public class Server
     		try 
 			{
         		// Read message from client
-        		String request = in.readLine();
+        		String request = serverIn.readLine();
 
         		if (request == null) 
 				{
@@ -116,7 +116,7 @@ public class Server
 						logRequest(request);
                 		if (arguments.length < 2) 
 						{
-                    		out.println("Usage: item <itemname>");
+                    		serverOut.println("Usage: item <itemname>");
                 		} 
 						else 
 						{
@@ -128,7 +128,7 @@ public class Server
 						logRequest(request);
                 		if (arguments.length < 3) 
 						{
-                    		out.println("Usage: bid <itemname> <bidamount>");
+                    		serverOut.println("Usage: bid <itemname> <bidamount>");
                 		} 
 						else 
 						{
@@ -137,7 +137,7 @@ public class Server
             		} 
 					else 
 					{
-                		out.println("Invalid command");
+                		serverOut.println("Invalid command");
             		}
         		}
     		} 
@@ -163,7 +163,7 @@ public class Server
 		{
 			if (items.isEmpty()) 
 			{
-				out.println("There are currently no items in this auction.");
+				serverOut.println("There are currently no items in this auction.");
 			} 
 			else 
 			{
@@ -175,7 +175,7 @@ public class Server
 					{
 						bidder = highestBidders.get(object);
 					}
-					out.printf("%s : %.1f : %s%n", object, highestBid, bidder);
+					serverOut.printf("%s : %.1f : %s%n", object, highestBid, bidder);
 				}
 			}
 		}
@@ -197,12 +197,14 @@ public class Server
 			*/
 			if (copiedMap.containsKey(object.toLowerCase())) 
 			{
-				out.println("Item already exists!");
+				serverOut.println("Item already exists!");
+				return;
 			} 
 			else //Otherwise treat this item as a new item and append it into "items" HashMap
 			{
 				items.put(object, 0.0);
-				out.println("Success.");
+				serverOut.println("Success.");
+				return;
 			}
 		}
 
@@ -225,20 +227,22 @@ public class Server
 			// Check if equivalent key was found
 			if (equivalentKey == null) 
 			{
-				out.println("Item not found.");
+				serverOut.println("Item not found.");
+				return;
 			}
 		
 			// Check if the bid is higher than the current highest bid for the item
 			double currentBid = copiedItems.get(equivalentKey);
 			if (bidAmount <= currentBid) 
 			{
-				out.println("Rejected.");
+				serverOut.println("Rejected.");
+				return;
 			}
 		
 			// Update items and highestBidders hashmaps with new bid and bidder
 			items.put(equivalentKey, bidAmount);
 			highestBidders.put(equivalentKey, bidder);
-			out.println("Accepted.");
+			serverOut.println("Accepted.");
 		}
 		
     	private void logRequest(String request) 
