@@ -23,13 +23,13 @@ public class Server
 	*/
 
 	// This is the HashMap for the items
-    private static final HashMap<String, Double> items = new HashMap<>();
-	private static final HashMap<String, String> highestBidders = new HashMap<>();
+    private static final HashMap<String, Double> items = new HashMap<>();			//<object, price>
+	private static final HashMap<String, String> highestBidders = new HashMap<>();	//<object, bidder>
 
     public static void main(String[] args) 
 	{
-        ServerSocket serverSocket = null;
-        ExecutorService executorService = null;
+        ServerSocket serverSocket = null;			//to be connected to the port
+        ExecutorService executorService = null;		//a thread-pool to be created
 
         try 
 		{
@@ -50,7 +50,9 @@ public class Server
         } 
 		catch (Exception exception) 
 		{
-            exception.printStackTrace();
+            exception.printStackTrace();	//provides more detailed information about the location and sequence of method calls that led up to the exception being thrown.
+			//Replace the above line with:
+			//System.err.println("Error: " + exception.getMessage()) //after the developmental stage
         } 
 		finally 
 		{
@@ -67,7 +69,9 @@ public class Server
                 } 
 				catch (Exception exception) 
 				{
-                    exception.printStackTrace();
+                    exception.printStackTrace();	//provides more detailed information about the location and sequence of method calls that led up to the exception being thrown.
+					//Replace the above line with:
+					//System.err.println("Error: " + exception.getMessage()) //after the developmental stage
                 }
             }
         }
@@ -142,7 +146,9 @@ public class Server
     		} 
 			catch (Exception exception) 
 			{
-        		exception.printStackTrace();
+        		exception.printStackTrace();	//provides more detailed information about the location and sequence of method calls that led up to the exception being thrown.
+				//Replace the above line with:
+				//System.err.println("Error: " + exception.getMessage()) //after the developmental stage
     		} 
 			finally 
 			{
@@ -153,7 +159,9 @@ public class Server
         		} 
 				catch (Exception exception) 
 				{
-            		exception.printStackTrace();
+            		exception.printStackTrace();	//provides more detailed information about the location and sequence of method calls that led up to the exception being thrown.
+					//Replace the above line with:
+					//System.err.println("Error: " + exception.getMessage()) //after the developmental stage
         		}
     		}
 		}

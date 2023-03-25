@@ -7,7 +7,7 @@ import java.net.Socket;
 public class Client 
 {
     private static final String HOSTNAME = "localhost";
-    private static final int PORT_NUMBER = 6500; // Replace with your chosen port number
+    private static final int PORT_NUMBER = 6500; // Replace with chosen port number the same as Sever.java
 
     public static void main(String[] args) 
 	{
@@ -18,7 +18,7 @@ public class Client
             return;
         }
 
-        // Connect to the server and send command to it
+        // Connect to the server by creating a scoket and using the HOSTNAME and PORT_NUMBER so that command can be sent to it
         try (Socket socket = new Socket(HOSTNAME, PORT_NUMBER);
             BufferedReader recieveServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter sendServer = new PrintWriter(socket.getOutputStream(), true)) 
@@ -68,7 +68,7 @@ public class Client
                         String serverResponse = recieveServer.readLine();
                         System.out.println(serverResponse);
                     }
-                    else if (newBid < 0)
+                    else if (newBid <= 0)
                     {
                         System.out.println("Invalid <bidamount> - only <bidamount> greater than 0 is accepted!");
                         return;
