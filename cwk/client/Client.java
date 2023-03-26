@@ -6,23 +6,34 @@ import java.net.Socket;
 
 public class Client 
 {
-    private static final String HOSTNAME = "localhost";
-    private static final int PORT_NUMBER = 6500; // Replace with chosen port number the same as Sever.java
+    private static final String HOSTNAME = "localhost";     //hostname of the server
+    private static final int PORT_NUMBER = 6500;            //Replace with chosen port number the same as Sever.java
 
     public static void main(String[] args) 
 	{
-        // Shows a summary of all the Usage and command-line instructions
+        //Shows a summary of all the Usage and command-line instructions
         if (args.length < 1) 
         {
             System.out.println("Usage: java Client <command>\njava Client show - show items in the auction\njava Client item <itemname> - add items to the auction\njava Client bid <itemname> <bidamount> - bid the item by name and bidamount");
             return;
         }
 
-        // Connect to the server by creating a scoket and using the HOSTNAME and PORT_NUMBER so that command can be sent to it
+        /**
+        * Connects to the server by creating a new socket with the specified `HOSTNAME` and `PORT_NUMBER`,
+        * and initializes the `recieveServer` and `sendServer` objects for communication with the server. 
+        * 
+        * @param HOSTNAME the hostname of the server
+        * @param PORT_NUMBER the port number on which the server is listening for incoming connections
+        * @throws IOException if an I/O error occurs while creating the socket, BufferedReader, or PrintWriter objects
+        */
         try (Socket socket = new Socket(HOSTNAME, PORT_NUMBER);
             BufferedReader recieveServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter sendServer = new PrintWriter(socket.getOutputStream(), true)) 
 		{
+            /**
+            * Checks the first word in the command-line argument.
+            * The command is then sent to the server and the response from the server is printed to the console.
+            */
 
             if (args[0].equalsIgnoreCase("show") && args.length == 1) 
 			{
